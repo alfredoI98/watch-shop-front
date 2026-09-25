@@ -1,0 +1,203 @@
+.hero-section {
+  position: relative;
+  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  padding: 60px 20px;
+  overflow: hidden;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clouds {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    /* Nubes grandes - más lentas */
+    radial-gradient(ellipse 800px 100px at 20% 30%, rgba(255, 255, 255, 0.15) 0%, transparent 100%),
+    radial-gradient(ellipse 900px 120px at 80% 40%, rgba(255, 255, 255, 0.12) 0%, transparent 100%),
+    radial-gradient(ellipse 700px 90px at 50% 60%, rgba(255, 255, 255, 0.1) 0%, transparent 100%),
+    /* Nubes medianas */
+    radial-gradient(ellipse 600px 80px at 30% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 100%),
+    radial-gradient(ellipse 700px 100px at 70% 70%, rgba(255, 255, 255, 0.09) 0%, transparent 100%),
+    radial-gradient(ellipse 650px 85px at 40% 80%, rgba(255, 255, 255, 0.07) 0%, transparent 100%);
+  background-size:
+    1000px 300px,
+    1200px 350px,
+    900px 280px,
+    800px 250px,
+    1100px 320px,
+    950px 290px;
+  background-position:
+    0% 0%,
+    0% 0%,
+    0% 0%,
+    0% 0%,
+    0% 0%,
+    0% 0%;
+  animation:
+    clouds1 40s linear infinite,
+    clouds2 50s linear infinite,
+    clouds3 60s linear infinite,
+    clouds4 45s linear infinite,
+    clouds5 55s linear infinite,
+    clouds6 65s linear infinite;
+  z-index: 1;
+}
+
+@keyframes clouds1 {
+  0% {
+    background-position:
+      0% 0%,
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%);
+  }
+  100% {
+    background-position:
+      100% 0%,
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%);
+  }
+}
+
+@keyframes clouds2 {
+  0% {
+    background-position:
+      var(--pos-y1, 0%),
+      -100% 0%,
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%);
+  }
+  100% {
+    background-position:
+      var(--pos-y1, 0%),
+      100% 0%,
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%);
+  }
+}
+
+@keyframes clouds3 {
+  0% {
+    background-position:
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      50% 0%,
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%);
+  }
+  100% {
+    background-position:
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      -50% 0%,
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%);
+  }
+}
+
+@keyframes clouds4 {
+  0% {
+    background-position:
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      0% 0%,
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%);
+  }
+  100% {
+    background-position:
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      100% 0%,
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%);
+  }
+}
+
+@keyframes clouds5 {
+  0% {
+    background-position:
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      -100% 0%,
+      var(--pos-y1, 0%);
+  }
+  100% {
+    background-position:
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      100% 0%,
+      var(--pos-y1, 0%);
+  }
+}
+
+@keyframes clouds6 {
+  0% {
+    background-position:
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      50% 0%;
+  }
+  100% {
+    background-position:
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      var(--pos-y1, 0%),
+      -50% 0%;
+  }
+}
+
+.watch-container {
+  position: relative;
+  display: inline-block;
+}
+
+.watch-container::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(ellipse at center, rgba(15, 52, 96, 0.4) 0%, rgba(22, 33, 62, 0.25) 30%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(40px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: 400px;
+    padding: 40px 10px;
+  }
+}
