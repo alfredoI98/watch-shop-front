@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -16,6 +17,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { logout } from '../../services/auth';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -63,6 +65,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export function Navbar() {
+  const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -107,6 +110,12 @@ export function Navbar() {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={() => {
+        logout();
+        navigate('/login');
+      }}>
+        Logout
+      </MenuItem>
     </Menu>
   );
 
@@ -189,6 +198,7 @@ export function Navbar() {
       >
         <Toolbar sx={{ backgroundColor: '#1a1a1a' }}>
           <IconButton
+            onClick={() => alert('Menu button clicked!')}
             size="large"
             edge="start"
             color="inherit"

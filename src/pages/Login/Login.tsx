@@ -18,6 +18,7 @@ export function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const user_auth = async (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -25,7 +26,7 @@ export function Login() {
 
     try {
       if (signState === 'Sign In') {
-        await login(email, password);
+        await login(email, password, rememberMe);
         toast.success('Inicio de sesión correcto.');
       } else {
         await signup(name, email, password, age, gender, address, phone);
@@ -61,7 +62,7 @@ export function Login() {
 
             <div className="form-help">
               <div className="remember">
-                <input type="checkbox" id='remember-me' />
+                <input checked={rememberMe} type="checkbox" id='remember-me' onChange={(e) => setRememberMe(e.target.checked)} />
                 <label htmlFor="remember-me">Remember me</label>
               </div>
               <p>Need help?</p>
