@@ -27,7 +27,7 @@ export function Login() {
     try {
       if (signState === 'Sign In') {
         await login(email, password, rememberMe);
-        toast.success('Inicio de sesión correcto.');
+        toast.success('Inicio de sesión exitoso.');
       } else {
         await signup(name, email, password, age, gender, address, phone);
         toast.success('Cuenta creada correctamente.');
