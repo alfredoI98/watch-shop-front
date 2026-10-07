@@ -1,0 +1,232 @@
+.add-watch-page {
+  min-height: 100vh;
+  padding: 104px 24px 56px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(212, 175, 55, 0.12), transparent 55%),
+    #f5f3ee;
+  color: #24231f;
+}
+
+.add-watch-card {
+  width: min(100%, 820px);
+  margin: 0 auto;
+  padding: 42px 48px;
+  border: 1px solid #e7e1d3;
+  border-radius: 8px;
+  background: #fffefa;
+  box-shadow: 0 18px 55px rgba(35, 31, 20, 0.08);
+}
+
+.add-watch-header {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.add-watch-eyebrow {
+  margin: 0 0 10px;
+  color: #a58322;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.add-watch-header h1 {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(30px, 5vw, 40px);
+  font-weight: 500;
+}
+
+.add-watch-header > p:last-child {
+  margin: 12px 0 0;
+  color: #77736a;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.add-watch-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.add-watch-field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 8px;
+  color: #34322c;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.add-watch-field--full {
+  grid-column: 1 / -1;
+}
+
+.add-watch-field input,
+.add-watch-field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid #d9d4c9;
+  border-radius: 4px;
+  outline: none;
+  background: #fff;
+  color: #24231f;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 400;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.add-watch-field input {
+  height: 48px;
+  padding: 0 14px;
+}
+
+.add-watch-field .add-watch-file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.add-watch-file-picker {
+  display: inline-flex;
+  min-height: 42px;
+  width: fit-content;
+  align-items: center;
+  padding: 0 14px;
+  border: 1px solid #d9d4c9;
+  border-radius: 3px;
+  background: #f7f5ef;
+  color: #514e46;
+  font: inherit;
+  cursor: pointer;
+}
+
+.add-watch-file-input:focus-visible + .add-watch-file-picker {
+  outline: 3px solid rgba(178, 142, 46, 0.35);
+  outline-offset: 2px;
+}
+
+.add-watch-field .add-watch-file-input:disabled + .add-watch-file-picker {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.add-watch-field textarea {
+  min-height: 112px;
+  padding: 12px 14px;
+  resize: vertical;
+}
+
+.add-watch-field input::placeholder,
+.add-watch-field textarea::placeholder {
+  color: #aaa69d;
+}
+
+.add-watch-field input:focus,
+.add-watch-field textarea:focus {
+  border-color: #b28e2e;
+  box-shadow: 0 0 0 3px rgba(178, 142, 46, 0.14);
+}
+
+.add-watch-field small {
+  color: #89857b;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.add-watch-preview {
+  display: flex;
+  min-height: 180px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 24px;
+  padding: 12px;
+  border: 1px dashed #d9d4c9;
+  border-radius: 4px;
+  background: #faf9f5;
+}
+
+.add-watch-preview img {
+  display: block;
+  max-width: 100%;
+  max-height: 240px;
+  object-fit: contain;
+}
+
+.add-watch-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.add-watch-actions button {
+  min-height: 46px;
+  padding: 0 22px;
+  border-radius: 4px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease, opacity 160ms ease;
+}
+
+.add-watch-cancel {
+  border: 1px solid #d9d4c9;
+  background: transparent;
+  color: #514e46;
+}
+
+.add-watch-cancel:hover {
+  border-color: #aaa397;
+  background: #f7f5ef;
+}
+
+.add-watch-submit {
+  border: 1px solid #a58322;
+  background: #a58322;
+  color: #fff;
+}
+
+.add-watch-submit:hover {
+  border-color: #8d6e19;
+  background: #8d6e19;
+}
+
+.add-watch-submit:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+@media (max-width: 600px) {
+  .add-watch-page {
+    padding: 92px 14px 32px;
+  }
+
+  .add-watch-card {
+    padding: 30px 20px;
+  }
+
+  .add-watch-fields {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .add-watch-field--full {
+    grid-column: auto;
+  }
+
+  .add-watch-actions {
+    flex-direction: column-reverse;
+  }
+
+  .add-watch-actions button {
+    width: 100%;
+  }
+}

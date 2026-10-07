@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import { Home } from './pages/Home/Home';
 import { Login } from './pages/Login/Login';
+import { AddNewProduct } from './pages/AddNewProduct/AddNewProduct';
 import { ToastContainer } from 'react-toastify'
 const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
 
@@ -26,6 +27,7 @@ function App() {
           {/* Rutas Protegidas */}
           <Route element={<ProtectedRoutes />}>
             <Route path="/" element={<Home />} />
+            <Route path="/products/new" element={<AddNewProduct />} />
           </Route>
         </Routes>
       </div>

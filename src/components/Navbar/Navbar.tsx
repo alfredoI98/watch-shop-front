@@ -17,6 +17,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import Button from '@mui/material/Button';
 import { logout } from '../../services/auth';
 
 const Search = styled('div')(({ theme }) => ({
@@ -111,6 +112,12 @@ export function Navbar() {
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem onClick={() => {
+        handleMenuClose();
+        navigate('/products/new');
+      }}>
+        Añadir reloj
+      </MenuItem>
+      <MenuItem onClick={() => {
         logout();
         navigate('/login');
       }}>
@@ -136,6 +143,12 @@ export function Navbar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
+      <MenuItem onClick={() => {
+        handleMobileMenuClose();
+        navigate('/products/new');
+      }}>
+        Añadir reloj
+      </MenuItem>
       <MenuItem>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit" sx={{ color: '#d4af37' }}>
           <Badge badgeContent={4} color="error">
@@ -232,6 +245,12 @@ export function Navbar() {
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <Button
+              onClick={() => navigate('/products/new')}
+              sx={{ color: '#d4af37', textTransform: 'none', fontWeight: 600 }}
+            >
+              Añadir reloj
+            </Button>
             <IconButton size="large" aria-label="show 4 new mails" color="inherit" sx={{ color: '#d4af37' }}>
               <Badge badgeContent={4} color="error">
                 <MailIcon />
