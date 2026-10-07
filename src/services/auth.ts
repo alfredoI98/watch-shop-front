@@ -1,5 +1,5 @@
 import api from '../api';
-const TOKEN_KEY = 'watch-shop-access-token';
+const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
 
 
 const saveToken = (token: string, remember: boolean) => {

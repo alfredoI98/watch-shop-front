@@ -3,7 +3,7 @@ import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import { Home } from './pages/Home/Home';
 import { Login } from './pages/Login/Login';
 import { ToastContainer } from 'react-toastify'
-const TOKEN_KEY = 'watch-shop-access-token';
+const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
 
 const ProtectedRoutes = () => {
   const token = localStorage.getItem(TOKEN_KEY) ?? sessionStorage.getItem(TOKEN_KEY);

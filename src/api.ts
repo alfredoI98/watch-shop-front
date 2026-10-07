@@ -1,5 +1,5 @@
 import axios from 'axios';
-const TOKEN_KEY = 'watch-shop-access-token';
+const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
 
 const api = axios.create({
   baseURL: 'http://localhost:3000/api', // La URL de tu backend en NestJS
