@@ -133,7 +133,6 @@ export const AddNewProduct = () => {
     try {
       await api.post('/watches', {
         ...form,
-        price: Number(form.price),
       });
       toast.success('El reloj se agregó al catálogo.');
       navigate('/');
