@@ -29,7 +29,7 @@ export function Home() {
         </div>
         <Grid container spacing={2} sx={{ marginTop: '20px', backgroundColor: '#f5f5f5', padding: '20px' }}>
           {watches.map((watch) => (
-            <Grid key={watch.id} size={3}>
+            <Grid key={watch._id} size={3}>
                 <WatchCard watch={watch} />
             </Grid>
           ))}

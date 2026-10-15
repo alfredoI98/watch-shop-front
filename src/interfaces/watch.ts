@@ -1,6 +1,7 @@
 export interface Watch {
-        id: string;
+        _id: string;
         name: string;
+        brand: string;
         description: string;
         price: string;
         category: string;

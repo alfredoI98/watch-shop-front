@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { SpinnerLoading } from '../../components/SpinnerLoading/SpinnerLoading';
-import { login, signup } from '../../services/auth';
+import { getUser, login, signup } from '../../services/auth';
 import logo from '../../assets/rolex_logo.png';
 import './Login.css';
+import { useCartStore } from '../../zustand/cartStore';
 
 export function Login() {
 
@@ -19,6 +20,7 @@ export function Login() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const loadCartFromStorage = useCartStore((state) => state.fetchUserCart);
 
   const user_auth = async (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -27,6 +29,8 @@ export function Login() {
     try {
       if (signState === 'Sign In') {
         await login(email, password, rememberMe);
+        // Cargar el carrito del usuario desde NestJS
+        loadCartFromStorage(getUser()?._id || '');
         toast.success('Inicio de sesión exitoso.');
       } else {
         await signup(name, email, password, age, gender, address, phone);

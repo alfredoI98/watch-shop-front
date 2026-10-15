@@ -10,12 +10,15 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useState } from 'react';
 import rolex_submariner_blue from "/src/assets/submariner_blue.avif";
 import type { Watch } from "../../interfaces/watch";
+import { useCartStore } from '../../zustand/cartStore';
+import { getUser } from '../../services/auth';
 
 export function WatchCard({ watch }: { watch: Watch }) {
     const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
     const descriptionWords = watch.description.trim().split(/\s+/);
     const isLongDescription = descriptionWords.length > 20;
+    const addItem = useCartStore((state) => state.addItem);
 
     return (
         <Card sx={{
@@ -49,6 +52,7 @@ export function WatchCard({ watch }: { watch: Watch }) {
                 <IconButton
                     className="favorite-button"
                     aria-label={isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+                    title={isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
                     aria-pressed={isFavorite}
                     onClick={() => setIsFavorite((favorite) => !favorite)}
                     sx={{
@@ -66,6 +70,7 @@ export function WatchCard({ watch }: { watch: Watch }) {
                     {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
                 </IconButton>
                 <Button
+                    onClick={() => addItem(watch, getUser()?._id)}
                     className="add-to-cart"
                     variant="contained"
                     sx={{
@@ -86,19 +91,19 @@ export function WatchCard({ watch }: { watch: Watch }) {
                 <Typography gutterBottom variant="h5" component="div">
                     {watch.name}
                 </Typography>
-            <Box sx={{ flex: 1, minHeight: 0, overflowY: isDescriptionExpanded ? 'auto' : 'hidden' }}>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    {isLongDescription && !isDescriptionExpanded
-                        ? `${descriptionWords.slice(0, 20).join(' ')}...`
-                        : watch.description}
-                </Typography>
-            </Box>
-            {isLongDescription && (
-                <Button
-                    sx={{ color: 'grey', textTransform: 'none', fontSize: '0.875rem', marginTop: '0.5rem', flexShrink: 0 }}
-                    aria-expanded={isDescriptionExpanded}
-                    onClick={() => setIsDescriptionExpanded((expanded) => !expanded)}
-                >
+                <Box sx={{ flex: 1, minHeight: 0, overflowY: isDescriptionExpanded ? 'auto' : 'hidden' }}>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                        {isLongDescription && !isDescriptionExpanded
+                            ? `${descriptionWords.slice(0, 20).join(' ')}...`
+                            : watch.description}
+                    </Typography>
+                </Box>
+                {isLongDescription && (
+                    <Button
+                        sx={{ color: 'grey', textTransform: 'none', fontSize: '0.875rem', marginTop: '0.5rem', flexShrink: 0 }}
+                        aria-expanded={isDescriptionExpanded}
+                        onClick={() => setIsDescriptionExpanded((expanded) => !expanded)}
+                    >
                         {isDescriptionExpanded ? 'Ver menos' : 'Ver más'}
                     </Button>
                 )}

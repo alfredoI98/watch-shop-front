@@ -17,8 +17,9 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import Button from '@mui/material/Button';
 import { logout } from '../../services/auth';
+import { useCartStore } from '../../zustand/cartStore';
+
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -75,6 +76,11 @@ export function Navbar() {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+  // Obtener el total de ítems en el carrito desde Zustand
+  const totalItems = useCartStore((state) => 
+    state.cart.length
+  );
+
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -109,8 +115,8 @@ export function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>Perfil</MenuItem>
+      <MenuItem onClick={handleMenuClose}>Mi cuenta</MenuItem>
       <MenuItem onClick={() => {
         handleMenuClose();
         navigate('/products/new');
@@ -121,7 +127,7 @@ export function Navbar() {
         logout();
         navigate('/login');
       }}>
-        Logout
+        Cerrar sesión
       </MenuItem>
     </Menu>
   );
@@ -155,7 +161,7 @@ export function Navbar() {
             <MailIcon />
           </Badge>
         </IconButton>
-        <p>Messages</p>
+        <p>Mensajes</p>
       </MenuItem>
       <MenuItem>
         <IconButton
@@ -164,11 +170,11 @@ export function Navbar() {
           color="inherit"
           sx={{ color: '#d4af37' }}
         >
-          <Badge badgeContent={4} color="error">
+          <Badge badgeContent={totalItems} color="error">
             <ShoppingCartIcon />
           </Badge>
         </IconButton>
-        <p>Shopping cart</p>
+        <p>Carrito de compras</p>
       </MenuItem>
       <MenuItem>
         <IconButton
@@ -181,7 +187,7 @@ export function Navbar() {
             <NotificationsIcon />
           </Badge>
         </IconButton>
-        <p>Notifications</p>
+        <p>Notificaciones</p>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
@@ -194,7 +200,7 @@ export function Navbar() {
         >
           <AccountCircle />
         </IconButton>
-        <p>Profile</p>
+        <p>Perfil</p>
       </MenuItem>
     </Menu>
   );
@@ -245,12 +251,6 @@ export function Navbar() {
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <Button
-              onClick={() => navigate('/products/new')}
-              sx={{ color: '#d4af37', textTransform: 'none', fontWeight: 600 }}
-            >
-              Añadir reloj
-            </Button>
             <IconButton size="large" aria-label="show 4 new mails" color="inherit" sx={{ color: '#d4af37' }}>
               <Badge badgeContent={4} color="error">
                 <MailIcon />
@@ -262,7 +262,7 @@ export function Navbar() {
               color="inherit"
               sx={{ color: '#d4af37' }}
             >
-              <Badge badgeContent={4} color="error">
+              <Badge badgeContent={totalItems} color="error">
                 <ShoppingCartIcon />
               </Badge>
             </IconButton>

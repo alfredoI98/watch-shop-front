@@ -1,5 +1,7 @@
 import api from '../api';
 const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
+const USER_KEY = import.meta.env.VITE_USER_KEY;
+import type { User } from '../interfaces/user';
 
 
 const saveToken = (token: string, remember: boolean) => {
@@ -7,12 +9,25 @@ const saveToken = (token: string, remember: boolean) => {
   storage.setItem(TOKEN_KEY, token);
 };
 
+const saveUser = (user: User, remember: boolean) => {
+  const storage = remember ? localStorage : sessionStorage;
+  storage.setItem(USER_KEY, JSON.stringify(user));
+};
+
 export const getToken = () =>
   localStorage.getItem(TOKEN_KEY) ?? sessionStorage.getItem(TOKEN_KEY);
+
+export const getUser = () => {
+  const user = localStorage.getItem(USER_KEY) ?? sessionStorage.getItem(USER_KEY);
+  return user ? JSON.parse(user) : null;
+};
 
 export const logout = () => {
   localStorage.removeItem(TOKEN_KEY);
   sessionStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(USER_KEY);
+  sessionStorage.removeItem(USER_KEY);
+  localStorage.removeItem('ecommerce-cart');
 };
 
 export const login = async (email: string, password: string, remember = false) => {
@@ -28,6 +43,7 @@ export const login = async (email: string, password: string, remember = false) =
     }
 
     saveToken(data.access_token, remember);
+    saveUser(data.user, remember);
     return data;
     
   } catch (error) {
@@ -59,25 +75,3 @@ export const signup = async (name: string, email: string, password: string, age:
     throw new Error('No se pudo crear la cuenta. Intenta nuevamente.', { cause: error });
   }
 };
-
-export const authenticatedFetch = (input: RequestInfo | URL, init: RequestInit = {}) => {
-  const token = getToken();
-  const headers = new Headers(init.headers);
-
-  if (token) {
-    headers.set('Authorization', `Bearer ${token}`);
-  }
-
-  return fetch(input, { ...init, headers });
-};
-
-// export const getCurrentUser = async () => {
-//   const response = await authenticatedFetch(`${API_URL}/me`);
-
-//   if (!response.ok) {
-//     logout();
-//     throw new Error('La sesión expiró.');
-//   }
-
-//   return response.json();
-// };
