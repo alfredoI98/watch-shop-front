@@ -4,6 +4,7 @@ import { Home } from './pages/Home/Home';
 import { Login } from './pages/Login/Login';
 import { AddNewProduct } from './pages/AddNewProduct/AddNewProduct';
 import { ToastContainer } from 'react-toastify'
+import { ShoppingCart } from './pages/UserCart/ShoppingCart';
 const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
 
 const ProtectedRoutes = () => {
@@ -28,6 +29,7 @@ function App() {
           <Route element={<ProtectedRoutes />}>
             <Route path="/" element={<Home />} />
             <Route path="/products/new" element={<AddNewProduct />} />
+            <Route path="/cart" element={<ShoppingCart />} />
           </Route>
         </Routes>
       </div>

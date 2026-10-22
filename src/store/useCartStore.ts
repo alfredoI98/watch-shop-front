@@ -10,7 +10,15 @@ interface CartItem {
   price: string;
 }
 
-export const useCartStore = create(
+interface CartStore {
+  cart: CartItem[];
+  addItem: (product: Watch, userId: string) => Promise<void>;
+  changeQuantity: (productId: string, change: -1 | 1, userId: string) => Promise<void>;
+  clearCart: (userId: string) => Promise<void>;
+  fetchUserCart: (userId: string) => Promise<void>;
+}
+
+export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
       cart: [], // Cada ítem: { productId, quantity, price }
@@ -41,6 +49,36 @@ export const useCartStore = create(
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
           toast.error('No se pudo agregar el reloj al carrito. Por favor, intenta nuevamente.');
+        }
+      },
+
+      changeQuantity: async (productId, change, userId) => {
+        try {
+          const currentCart = get().cart;
+          const item = currentCart.find((cartItem) => cartItem.productId === productId);
+          if (!item) return;
+
+          const newCart = change === 1
+            ? currentCart.map((cartItem) =>
+                cartItem.productId === productId
+                  ? { ...cartItem, quantity: cartItem.quantity + 1 }
+                  : cartItem
+              )
+            : item.quantity <= 1
+              ? currentCart.filter((cartItem) => cartItem.productId !== productId)
+              : currentCart.map((cartItem) =>
+                  cartItem.productId === productId
+                    ? { ...cartItem, quantity: cartItem.quantity - 1 }
+                    : cartItem
+                );
+
+          set({ cart: newCart });
+
+          if (userId) {
+            await api.post('/watches/cart', { userId, items: newCart });
+          }
+        } catch {
+          toast.error('No se pudo actualizar la cantidad. Por favor, intenta nuevamente.');
         }
       },
 

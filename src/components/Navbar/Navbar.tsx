@@ -18,7 +18,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { logout } from '../../services/auth';
-import { useCartStore } from '../../zustand/cartStore';
+import { useCartStore } from '../../store/useCartStore';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -230,9 +230,22 @@ export function Navbar() {
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: 'none', sm: 'block' }, color: '#d4af37', fontWeight: 'bold', letterSpacing: '1px' }}
+            sx={{
+              display: { xs: 'none', sm: 'block' },
+              mr: 3,
+              background: 'linear-gradient(110deg, #f5e6a8 0%, #d4af37 45%, #fff2bd 70%, #b8902e 100%)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              color: 'transparent',
+              fontFamily: '"Palatino Linotype", "Book Antiqua", Georgia, serif',
+              fontSize: { sm: '1.05rem', md: '1.25rem' },
+              fontWeight: 600,
+              letterSpacing: '0.09em',
+              textShadow: '0 1px 12px rgba(212, 175, 55, 0.18)',
+              textTransform: 'uppercase',
+            }}
           >
-            Rolex
+            Herencia del Tiempo
           </Typography>
           <Search>
             <SearchIconWrapper sx={{ color: '#d4af37' }}>
@@ -261,6 +274,7 @@ export function Navbar() {
               aria-label="show 4 items in shopping cart"
               color="inherit"
               sx={{ color: '#d4af37' }}
+              onClick={() => navigate('/cart')}
             >
               <Badge badgeContent={totalItems} color="error">
                 <ShoppingCartIcon />

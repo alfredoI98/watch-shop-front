@@ -5,7 +5,7 @@ import { SpinnerLoading } from '../../components/SpinnerLoading/SpinnerLoading';
 import { getUser, login, signup } from '../../services/auth';
 import logo from '../../assets/rolex_logo.png';
 import './Login.css';
-import { useCartStore } from '../../zustand/cartStore';
+import { useCartStore } from '../../store/useCartStore';
 
 export function Login() {
 

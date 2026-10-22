@@ -29,11 +29,12 @@ api.interceptors.response.use(
       error.response?.status === 401 &&
       !error.config?.url?.endsWith('/login')
     ) {
-      // Si el token expira, se elimina y se redirige al login. Tamnien se elimina la data del usuario del localStorage y sessionStorage
+      // Si el token expira, se elimina y se redirige al login. Tambien se elimina la data del usuario del localStorage y sessionStorage
       localStorage.removeItem(TOKEN_KEY);
       sessionStorage.removeItem(TOKEN_KEY);
       localStorage.removeItem(USER_KEY);
       sessionStorage.removeItem(USER_KEY);
+      localStorage.removeItem('ecommerce-cart');
       window.location.href = '/login';
     }
     return Promise.reject(error);
