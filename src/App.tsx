@@ -7,6 +7,7 @@ import { AddNewProduct } from './pages/AddNewProduct/AddNewProduct';
 import { ToastContainer } from 'react-toastify'
 import { ShoppingCart } from './pages/UserCart/ShoppingCart';
 import { Favorites } from './pages/Favorites/Favorites';
+import { MyAccount } from './pages/MyAccount/MyAccount';
 import { getUser } from './services/auth';
 import { useFavoritesStore } from './store/useFavoritesStore';
 const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
@@ -43,6 +44,7 @@ function App() {
             <Route path="/products/new" element={<AddNewProduct />} />
             <Route path="/cart" element={<ShoppingCart />} />
             <Route path="/favorites" element={<Favorites />} />
+            <Route path="/account" element={<MyAccount />} />
           </Route>
         </Routes>
       </div>

@@ -118,8 +118,12 @@ export function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Perfil</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Mi cuenta</MenuItem>
+      <MenuItem onClick={() => {
+        handleMenuClose();
+        navigate('/account');
+      }}>
+        Mi cuenta
+      </MenuItem>
       <MenuItem onClick={() => {
         handleMenuClose();
         navigate('/products/new');
@@ -152,6 +156,12 @@ export function Navbar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
+      <MenuItem onClick={() => {
+        handleMobileMenuClose();
+        navigate('/account');
+      }}>
+        Mi cuenta
+      </MenuItem>
       <MenuItem onClick={() => {
         handleMobileMenuClose();
         navigate('/products/new');
@@ -203,19 +213,7 @@ export function Navbar() {
         </IconButton>
         <p>Notificaciones</p>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-          sx={{ color: '#d4af37' }}
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Perfil</p>
-      </MenuItem>
+
     </Menu>
   );
 
