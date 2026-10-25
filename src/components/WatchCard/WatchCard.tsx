@@ -11,14 +11,18 @@ import { useState } from 'react';
 import rolex_submariner_blue from "/src/assets/submariner_blue.avif";
 import type { Watch } from "../../interfaces/watch";
 import { useCartStore } from '../../store/useCartStore';
+import { useFavoritesStore } from '../../store/useFavoritesStore';
 import { getUser } from '../../services/auth';
 
 export function WatchCard({ watch }: { watch: Watch }) {
     const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
-    const [isFavorite, setIsFavorite] = useState(false);
     const descriptionWords = watch.description.trim().split(/\s+/);
     const isLongDescription = descriptionWords.length > 20;
     const addItem = useCartStore((state) => state.addItem);
+    const isFavorite = useFavoritesStore((state) =>
+        state.favorites.some((favorite) => favorite._id === watch._id)
+    );
+    const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
 
     return (
         <Card sx={{
@@ -54,7 +58,7 @@ export function WatchCard({ watch }: { watch: Watch }) {
                             aria-label={isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
                             title={isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
                             aria-pressed={isFavorite}
-                            onClick={() => setIsFavorite((favorite) => !favorite)}
+                            onClick={() => void toggleFavorite(watch, getUser()?._id ?? '')}
                             sx={{
                                 position: 'absolute',
                                 top: 12,

@@ -28,6 +28,7 @@ export const logout = () => {
   localStorage.removeItem(USER_KEY);
   sessionStorage.removeItem(USER_KEY);
   localStorage.removeItem('ecommerce-cart');
+  localStorage.removeItem('ecommerce-favorites');
 };
 
 export const login = async (email: string, password: string, remember = false) => {
@@ -69,6 +70,7 @@ export const signup = async (name: string, email: string, password: string, age:
   }
 
   saveToken(data.access_token, false); // No se recuerda la sesión por defecto al registrarse
+  saveUser(data.user, false);
   return data;
 
   } catch (error) {

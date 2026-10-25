@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import { Home } from './pages/Home/Home';
@@ -5,6 +6,9 @@ import { Login } from './pages/Login/Login';
 import { AddNewProduct } from './pages/AddNewProduct/AddNewProduct';
 import { ToastContainer } from 'react-toastify'
 import { ShoppingCart } from './pages/UserCart/ShoppingCart';
+import { Favorites } from './pages/Favorites/Favorites';
+import { getUser } from './services/auth';
+import { useFavoritesStore } from './store/useFavoritesStore';
 const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
 
 const ProtectedRoutes = () => {
@@ -17,6 +21,14 @@ const ProtectedRoutes = () => {
 function App() {
   // Create a client
   const queryClient = new QueryClient();
+  const fetchUserFavorites = useFavoritesStore((state) => state.fetchUserFavorites);
+
+  useEffect(() => {
+    const userId = getUser()?._id;
+    if (userId) {
+      void fetchUserFavorites(userId);
+    }
+  }, [fetchUserFavorites]);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -30,6 +42,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/products/new" element={<AddNewProduct />} />
             <Route path="/cart" element={<ShoppingCart />} />
+            <Route path="/favorites" element={<Favorites />} />
           </Route>
         </Routes>
       </div>

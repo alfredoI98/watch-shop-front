@@ -35,6 +35,7 @@ api.interceptors.response.use(
       localStorage.removeItem(USER_KEY);
       sessionStorage.removeItem(USER_KEY);
       localStorage.removeItem('ecommerce-cart');
+      localStorage.removeItem('ecommerce-favorites');
       window.location.href = '/login';
     }
     return Promise.reject(error);

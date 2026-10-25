@@ -6,6 +6,7 @@ import { getUser, login, signup } from '../../services/auth';
 import logo from '../../assets/rolex_logo.png';
 import './Login.css';
 import { useCartStore } from '../../store/useCartStore';
+import { useFavoritesStore } from '../../store/useFavoritesStore';
 
 export function Login() {
 
@@ -21,6 +22,7 @@ export function Login() {
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const loadCartFromStorage = useCartStore((state) => state.fetchUserCart);
+  const loadFavoritesFromDatabase = useFavoritesStore((state) => state.fetchUserFavorites);
 
   const user_auth = async (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -31,6 +33,7 @@ export function Login() {
         await login(email, password, rememberMe);
         // Cargar el carrito del usuario desde NestJS
         loadCartFromStorage(getUser()?._id || '');
+        await loadFavoritesFromDatabase(getUser()?._id || '');
         toast.success('Inicio de sesión exitoso.');
       } else {
         await signup(name, email, password, age, gender, address, phone);

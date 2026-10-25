@@ -17,8 +17,10 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import { logout } from '../../services/auth';
 import { useCartStore } from '../../store/useCartStore';
+import { useFavoritesStore } from '../../store/useFavoritesStore';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -80,6 +82,7 @@ export function Navbar() {
   const totalItems = useCartStore((state) => 
     state.cart.length
   );
+  const totalFavorites = useFavoritesStore((state) => state.favorites.length);
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -155,6 +158,17 @@ export function Navbar() {
       }}>
         Añadir reloj
       </MenuItem>
+      <MenuItem onClick={() => {
+        handleMobileMenuClose();
+        navigate('/favorites');
+      }}>
+        <IconButton size="large" aria-label="Productos favoritos" color="inherit" sx={{ color: '#d4af37' }}>
+          <Badge badgeContent={totalFavorites} color="error">
+            <FavoriteIcon />
+          </Badge>
+        </IconButton>
+        <p>Mis favoritos</p>
+      </MenuItem>
       <MenuItem>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit" sx={{ color: '#d4af37' }}>
           <Badge badgeContent={4} color="error">
@@ -163,7 +177,7 @@ export function Navbar() {
         </IconButton>
         <p>Mensajes</p>
       </MenuItem>
-      <MenuItem>
+      <MenuItem onClick={() => navigate('/cart')}>
         <IconButton
           size="large"
           aria-label="show 4 items in shopping cart"
@@ -230,6 +244,7 @@ export function Navbar() {
             variant="h6"
             noWrap
             component="div"
+            onClick={() => navigate('/')}
             sx={{
               display: { xs: 'none', sm: 'block' },
               mr: 3,
@@ -243,6 +258,7 @@ export function Navbar() {
               letterSpacing: '0.09em',
               textShadow: '0 1px 12px rgba(212, 175, 55, 0.18)',
               textTransform: 'uppercase',
+              cursor: 'pointer'
             }}
           >
             Herencia del Tiempo
@@ -267,6 +283,17 @@ export function Navbar() {
             <IconButton size="large" aria-label="show 4 new mails" color="inherit" sx={{ color: '#d4af37' }}>
               <Badge badgeContent={4} color="error">
                 <MailIcon />
+              </Badge>
+            </IconButton>
+            <IconButton
+              size="large"
+              aria-label={`Mis favoritos: ${totalFavorites} productos`}
+              color="inherit"
+              sx={{ color: '#d4af37' }}
+              onClick={() => navigate('/favorites')}
+            >
+              <Badge badgeContent={totalFavorites} color="error">
+                <FavoriteIcon />
               </Badge>
             </IconButton>
             <IconButton
