@@ -10,11 +10,13 @@ import { useHook } from "./useHook";
 import rolexSubmarinerBlue from "../../assets/submariner_blue.avif";
 import { useCartStore } from "../../store/useCartStore";
 import { getUser } from "../../services/auth";
+import { useNavigate } from 'react-router-dom';
 
 const formatPrice = (price: number) => `$${price.toLocaleString("es-MX")}`;
 
 export const ShoppingCart = () => {
   const { isLoading, watches, idsProductsInCart } = useHook();
+  const navigate = useNavigate();
   const changeQuantity = useCartStore((state) => state.changeQuantity);
 
   if (isLoading) {
@@ -50,6 +52,9 @@ export const ShoppingCart = () => {
             <Typography color="text.secondary" sx={{ mt: 1 }}>
               Agrega un reloj para verlo aquí.
             </Typography>
+            <Button variant="contained" onClick={() => navigate('/')} sx={{ mt: 3 }}>
+              Explorar relojes
+            </Button>
           </Paper>
         ) : (
           <>

@@ -23,6 +23,7 @@ export const getUser = () => {
 };
 
 export const logout = () => {
+  // Elimina el token y la información del usuario del almacenamiento local y de sesión
   localStorage.removeItem(TOKEN_KEY);
   sessionStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(USER_KEY);

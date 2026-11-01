@@ -16,14 +16,22 @@ export function Home() {
       <>
         <Navbar />
         <div className="hero-section">
-          <div className="clouds"></div>
-          <SimpleParallax delay={1.1} scale={1.5}>
+          <div className="clouds" aria-hidden="true">
+            <span className="cloud cloud-1" />
+            <span className="cloud cloud-2" />
+            <span className="cloud cloud-3" />
+            <span className="cloud cloud-4" />
+            <span className="cloud cloud-5" />
+          </div>
+          <SimpleParallax delay={1.1} scale={1.18} orientation="down" maxTransition={25}>
             <div className="watch-container">
-              <img
-                src={rolex_submariner_black}
-                alt={"image"}
-                style={{ maxWidth: '1000px', height: 'auto', display: 'block', margin: '0 auto', position: 'relative', zIndex: 2 }}
-              />
+              <div className="watch-visual">
+                <img
+                  src={rolex_submariner_black}
+                  alt={"image"}
+                  style={{ maxWidth: '1000px', height: 'auto', display: 'block', margin: '0 auto', position: 'relative', zIndex: 2 }}
+                />
+              </div>
             </div>
           </SimpleParallax>
         </div>

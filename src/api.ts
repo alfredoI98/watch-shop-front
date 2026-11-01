@@ -1,6 +1,6 @@
 import axios from 'axios';
 const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
-const USER_KEY = import.meta.env.VITE_USER_KEY;
+import { logout } from './services/auth';
 
 const api = axios.create({
   baseURL: 'http://localhost:3000/api', // La URL de tu backend en NestJS
@@ -30,12 +30,7 @@ api.interceptors.response.use(
       !error.config?.url?.endsWith('/login')
     ) {
       // Si el token expira, se elimina y se redirige al login. Tambien se elimina la data del usuario del localStorage y sessionStorage
-      localStorage.removeItem(TOKEN_KEY);
-      sessionStorage.removeItem(TOKEN_KEY);
-      localStorage.removeItem(USER_KEY);
-      sessionStorage.removeItem(USER_KEY);
-      localStorage.removeItem('ecommerce-cart');
-      localStorage.removeItem('ecommerce-favorites');
+      logout();
       window.location.href = '/login';
     }
     return Promise.reject(error);
