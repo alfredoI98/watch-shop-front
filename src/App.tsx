@@ -8,7 +8,13 @@ import { ToastContainer } from 'react-toastify'
 import { ShoppingCart } from './pages/UserCart/ShoppingCart';
 import { Favorites } from './pages/Favorites/Favorites';
 import { MyAccount } from './pages/MyAccount/MyAccount';
-import { getUser } from './services/auth';
+import {
+  getUser,
+  logout,
+  refreshTokenIfNeeded,
+  SessionExpiredError,
+  shouldRefreshToken,
+} from './services/auth';
 import { useFavoritesStore } from './store/useFavoritesStore';
 const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY;
 
@@ -25,6 +31,21 @@ function App() {
   const fetchUserFavorites = useFavoritesStore((state) => state.fetchUserFavorites);
 
   useEffect(() => {
+    const refreshSessionIfNeeded = async () => {
+      if (!shouldRefreshToken()) return;
+
+      try {
+        await refreshTokenIfNeeded();
+      } catch (error) {
+        if (error instanceof SessionExpiredError) {
+          logout();
+          window.location.href = '/login';
+        }
+      }
+    };
+
+    void refreshSessionIfNeeded();
+
     const userId = getUser()?._id;
     if (userId) {
       void fetchUserFavorites(userId);

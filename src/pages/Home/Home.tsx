@@ -10,7 +10,7 @@ import { SpinnerLoading } from '../../components/SpinnerLoading/SpinnerLoading';
 
 export function Home() {
   const { isLoading, watches } = useHook();
-  
+
   return (
     isLoading ? <SpinnerLoading /> :
       <>
@@ -35,13 +35,33 @@ export function Home() {
             </div>
           </SimpleParallax>
         </div>
-        <Grid container spacing={2} sx={{ marginTop: '20px', backgroundColor: '#f5f5f5', padding: '20px' }}>
-          {watches.map((watch) => (
-            <Grid key={watch._id} size={3}>
+
+        <section className="catalog-section">
+          <div className="catalog-header">
+            <span className="catalog-kicker">Colección</span>
+            <h2>Relojes de precisión</h2>
+            <p>Descubre piezas elegantes para cada estilo y ocasión.</p>
+          </div>
+
+          <Grid
+            container
+            spacing={{ xs: 2, md: 3 }}
+            sx={{
+              margin: 0,
+              width: '100%',
+            }}
+          >
+            {watches.map((watch) => (
+              <Grid
+                key={watch._id}
+                size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
+              >
                 <WatchCard watch={watch} />
-            </Grid>
-          ))}
-        </Grid>
+              </Grid>
+            ))}
+          </Grid>
+        </section>
+
         <Footer />
       </>
   )
