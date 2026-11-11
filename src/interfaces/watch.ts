@@ -8,4 +8,5 @@ export interface Watch {
         movementType: string;
         waterResistance: string;
         imagePath: string;
+        stock: number;
     }

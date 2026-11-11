@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import api from '../../api';
 import { Navbar } from '../../components/Navbar/Navbar';
+import { sanitizePriceInput } from '../../utils/utils';
 import './AddNewProduct.css';
 
 interface WatchForm {
@@ -16,6 +17,7 @@ interface WatchForm {
   movementType: string;
   waterResistance: string;
   imagePath: string;
+  stock: number;
 }
 
 const initialForm: WatchForm = {
@@ -27,6 +29,7 @@ const initialForm: WatchForm = {
   movementType: '',
   waterResistance: '',
   imagePath: '',
+  stock: 0,
 };
 
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
@@ -84,13 +87,18 @@ export const AddNewProduct = () => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
-    setForm((currentForm) => ({ ...currentForm, [name]: value.trim() }));
+    setForm((currentForm) => ({ ...currentForm, [name]: value }));
   };
 
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const price = event.target.value.replace(/\D/g, '');
-    setForm((currentForm) => ({ ...currentForm, price }));
+    const nextPrice = sanitizePriceInput(event.target.value);
+    setForm((currentForm) => ({ ...currentForm, price: nextPrice }));
   };
+
+  const handleStockChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const stock = event.target.value.replace(/\D/g, '');
+    setForm((currentForm) => ({ ...currentForm, stock: parseInt(stock, 10) || 0 }));
+  }
 
   const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -189,12 +197,11 @@ export const AddNewProduct = () => {
                 <input
                   name="price"
                   type="text"
-                  inputMode="numeric"
+                  inputMode="decimal"
                   value={form.price}
                   onChange={handlePriceChange}
-                  placeholder="Ej. 1500"
-                  pattern="[1-9][0-9]*"
-                  title="Ingresa un precio entero positivo, sin decimales."
+                  placeholder="Ej. 1500 o 1500.99"
+                  title="Ingresa un precio válido con hasta 2 decimales."
                   required
                 />
               </label>
@@ -222,6 +229,21 @@ export const AddNewProduct = () => {
                   value={form.waterResistance}
                   onChange={handleChange}
                   placeholder="Ej. 100 m / 10 ATM"
+                  required
+                />
+              </label>
+
+              <label className="add-watch-field">
+                <span>Stock</span>
+                <input
+                  name="stock"
+                  type="text"
+                  inputMode="numeric"
+                  value={form.stock}
+                  onChange={handleStockChange}
+                  placeholder="Ej. 1500"
+                  pattern="[1-9][0-9]*"
+                  title="Ingresa un precio entero positivo, sin decimales."
                   required
                 />
               </label>
