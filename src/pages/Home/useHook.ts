@@ -3,7 +3,9 @@ import api from "../../api";
 import type { Watch } from "../../interfaces/watch";
 import { toast } from "react-toastify";
 
-export const useHook = (searchTerm: string) => {
+const searchFields = ['search', 'brand', 'category', 'movementType', 'waterResistance'] as const;
+
+export const useHook = (searchKey: string) => {
     const [isLoading, setIsLoading] = useState(true);
     const [watches, setWatches] = useState<Watch[]>([]);
     const [loadedSearch, setLoadedSearch] = useState<string | null>(null);
@@ -12,14 +14,24 @@ export const useHook = (searchTerm: string) => {
         let isCurrentRequest = true;
 
         const getWatches = async () => {
+            const searchParams = new URLSearchParams(searchKey);
+            const requestParams: Record<string, string> = {};
+
+            searchFields.forEach((field) => {
+                const value = searchParams.get(field)?.trim();
+                if (value) {
+                    requestParams[field === 'search' ? 'name' : field] = value;
+                }
+            });
+
             setIsLoading(true);
             setWatches([]);
             setLoadedSearch(null);
 
             try {
-                const response = searchTerm
-                    ? await api.get('/watches', { params: { name: searchTerm } })
-                    : await api.get('/watches');
+                const response = await api.get('/watches', {
+                    params: requestParams,
+                });
 
                 if (isCurrentRequest) {
                     setWatches(response.data);
@@ -32,7 +44,7 @@ export const useHook = (searchTerm: string) => {
             } finally {
                 if (isCurrentRequest) {
                     setIsLoading(false);
-                    setLoadedSearch(searchTerm);
+                    setLoadedSearch(searchKey);
                 }
             }
         };
@@ -42,7 +54,7 @@ export const useHook = (searchTerm: string) => {
         return () => {
             isCurrentRequest = false;
         };
-    }, [searchTerm]);
+    }, [searchKey]);
 
     return { isLoading, watches, loadedSearch };
 }

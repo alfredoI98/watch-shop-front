@@ -12,14 +12,18 @@ import { useSearchParams } from 'react-router-dom';
 
 export function Home() {
   const [searchParams] = useSearchParams();
+  const searchKey = searchParams.toString();
   const searchTerm = searchParams.get('search')?.trim() ?? '';
-  const { isLoading, watches, loadedSearch } = useHook(searchTerm);
+  const hasFilters = ['brand', 'category', 'movementType', 'waterResistance']
+    .some((filter) => Boolean(searchParams.get(filter)?.trim()));
+  const hasSearch = Boolean(searchTerm);
+  const { isLoading, watches, loadedSearch } = useHook(searchKey);
 
   useEffect(() => {
-    if (searchTerm && loadedSearch === searchTerm) {
+    if ((hasSearch || hasFilters) && loadedSearch === searchKey) {
       document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [loadedSearch, searchTerm]);
+  }, [hasFilters, hasSearch, loadedSearch, searchKey]);
 
   return (
     isLoading ? <SpinnerLoading /> :
@@ -49,10 +53,16 @@ export function Home() {
         <section id="catalog" className="catalog-section">
           <div className="catalog-header">
             <span className="catalog-kicker">Colección</span>
-            <h2>{searchTerm ? `Resultados para "${searchTerm}"` : 'Relojes de precisión'}</h2>
+            <h2>
+              {hasSearch
+                ? `Resultados para "${searchTerm}"`
+                : hasFilters
+                  ? 'Relojes filtrados'
+                  : 'Relojes de precisión'}
+            </h2>
             <p>
-              {searchTerm
-                ? 'Productos que coinciden con tu búsqueda.'
+              {hasSearch || hasFilters
+                ? 'Productos que coinciden con tus criterios.'
                 : 'Descubre piezas elegantes para cada estilo y ocasión.'}
             </p>
           </div>
@@ -76,7 +86,11 @@ export function Home() {
               ))
             ) : (
               <Grid size={12}>
-                <p>{searchTerm ? 'No se encontraron relojes con ese nombre.' : 'No hay relojes disponibles.'}</p>
+                <p>
+                  {hasSearch || hasFilters
+                    ? 'No se encontraron relojes con esos criterios.'
+                    : 'No hay relojes disponibles.'}
+                </p>
               </Grid>
             )}
           </Grid>

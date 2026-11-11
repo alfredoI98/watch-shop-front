@@ -1,10 +1,15 @@
 import { useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
@@ -12,6 +17,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
+import TuneIcon from '@mui/icons-material/Tune';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -22,6 +29,33 @@ import { logout } from '../../services/auth';
 import { useCartStore } from '../../store/useCartStore';
 import { useFavoritesStore } from '../../store/useFavoritesStore';
 
+type CatalogFilters = {
+  brand: string;
+  category: string;
+  movementType: string;
+  waterResistance: string;
+};
+
+const emptyFilters: CatalogFilters = {
+  brand: '',
+  category: '',
+  movementType: '',
+  waterResistance: '',
+};
+
+const getCatalogFilters = (params: URLSearchParams): CatalogFilters => ({
+  brand: params.get('brand') ?? '',
+  category: params.get('category') ?? '',
+  movementType: params.get('movementType') ?? '',
+  waterResistance: params.get('waterResistance') ?? '',
+});
+
+const filterFields: Array<{ key: keyof CatalogFilters; label: string; placeholder: string }> = [
+  { key: 'brand', label: 'Marca', placeholder: 'Ej. Rolex' },
+  { key: 'category', label: 'Categoría', placeholder: 'Ej. Deportivo' },
+  { key: 'movementType', label: 'Tipo de movimiento', placeholder: 'Ej. Automático' },
+  { key: 'waterResistance', label: 'Resistencia al agua', placeholder: 'Ej. 100 m' },
+];
 
 const Search = styled('form')(({ theme }) => ({
   position: 'relative',
@@ -70,7 +104,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export function Navbar() {
   const navigate = useNavigate();
-  const [searchValue, setSearchValue] = useState('');
+  const [searchParams] = useSearchParams();
+  const [searchValue, setSearchValue] = useState(searchParams.get('search') ?? '');
+  const [filters, setFilters] = useState<CatalogFilters>(() => getCatalogFilters(searchParams));
+  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null);
@@ -78,15 +115,35 @@ export function Navbar() {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const searchTerm = searchValue.trim();
+  const navigateToCatalog = (searchTerm: string, nextFilters: CatalogFilters) => {
+    const params = new URLSearchParams();
+    if (searchTerm.trim()) params.set('search', searchTerm.trim());
+
+    filterFields.forEach(({ key }) => {
+      const value = nextFilters[key].trim();
+      if (value) params.set(key, value);
+    });
 
     navigate({
       pathname: '/',
-      search: searchTerm ? `?search=${encodeURIComponent(searchTerm)}` : '',
+      search: params.toString() ? `?${params.toString()}` : '',
       hash: '#catalog',
     });
+  };
+
+  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const currentFilters = getCatalogFilters(searchParams);
+    setFilters(currentFilters);
+    navigateToCatalog(searchValue, currentFilters);
+  };
+
+  const activeFilterCount = filterFields.filter(({ key }) => searchParams.has(key)).length;
+
+  const handleOpenFilters = () => {
+    setFilters(getCatalogFilters(searchParams));
+    setSearchValue(searchParams.get('search') ?? '');
+    setIsFilterDrawerOpen(true);
   };
 
   // Obtener el total de ítems en el carrito desde Zustand
@@ -110,6 +167,17 @@ export function Navbar() {
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const handleApplyFilters = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    navigateToCatalog(searchValue || searchParams.get('search') || '', filters);
+    setIsFilterDrawerOpen(false);
+  };
+
+  const handleClearFilters = () => {
+    setFilters(emptyFilters);
+    navigateToCatalog(searchValue || searchParams.get('search') || '', emptyFilters);
   };
 
   const menuId = 'primary-search-account-menu';
@@ -240,14 +308,16 @@ export function Navbar() {
       >
         <Toolbar sx={{ backgroundColor: '#1a1a1a' }}>
           <IconButton
-            onClick={() => alert('Menu button clicked!')}
+            onClick={handleOpenFilters}
             size="large"
             edge="start"
             color="inherit"
-            aria-label="open drawer"
+            aria-label="Abrir filtros de productos"
             sx={{ mr: 2, color: '#d4af37' }}
           >
-            <MenuIcon />
+            <Badge badgeContent={activeFilterCount} color="warning">
+              <MenuIcon />
+            </Badge>
           </IconButton>
           <Typography
             variant="h6"
@@ -352,6 +422,82 @@ export function Navbar() {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
+      <Drawer
+        anchor="left"
+        open={isFilterDrawerOpen}
+        onClose={() => setIsFilterDrawerOpen(false)}
+        slotProps={{
+          paper: {
+            sx: {
+              width: { xs: '100%', sm: 380 },
+              maxWidth: '100%',
+              backgroundColor: '#faf9f6',
+            },
+          },
+        }}
+      >
+        <Box
+          component="form"
+          onSubmit={handleApplyFilters}
+          sx={{ display: 'flex', flexDirection: 'column', height: '100%', p: 3 }}
+        >
+          <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+            <Box>
+              <Typography variant="overline" sx={{ color: '#9b7a20', letterSpacing: '0.16em' }}>
+                Herencia del Tiempo
+              </Typography>
+              <Typography variant="h5" sx={{ color: '#1a1a1a', fontWeight: 600 }}>
+                Filtrar colección
+              </Typography>
+            </Box>
+            <IconButton aria-label="Cerrar filtros" onClick={() => setIsFilterDrawerOpen(false)}>
+              <CloseIcon />
+            </IconButton>
+          </Stack>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2.5 }}>
+            Encuentra tu próximo reloj ajustando los criterios.
+          </Typography>
+          <Divider sx={{ mb: 2.5 }} />
+          <Stack spacing={2.25}>
+            {filterFields.map(({ key, label, placeholder }) => (
+              <TextField
+                key={key}
+                label={label}
+                placeholder={placeholder}
+                value={filters[key]}
+                onChange={(event) => setFilters((current) => ({ ...current, [key]: event.target.value }))}
+                size="small"
+                fullWidth
+              />
+            ))}
+          </Stack>
+          <Box sx={{ flexGrow: 1 }} />
+          <Divider sx={{ my: 2.5 }} />
+          <Stack direction="row" spacing={1.5}>
+            <Button
+              variant="text"
+              onClick={handleClearFilters}
+              sx={{ color: '#5f5a4d', textTransform: 'none' }}
+            >
+              Limpiar
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              startIcon={<TuneIcon />}
+              sx={{
+                flexGrow: 1,
+                backgroundColor: '#1a1a1a',
+                color: '#e3c56b',
+                textTransform: 'none',
+                '&:hover': { backgroundColor: '#333' },
+              }}
+            >
+              Ver resultados
+            </Button>
+          </Stack>
+        </Box>
+      </Drawer>
     </Box>
   );
 }
