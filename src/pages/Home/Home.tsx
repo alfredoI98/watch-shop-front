@@ -7,9 +7,19 @@ import { Footer } from '../../components/Footer/Footer';
 import { Grid } from '@mui/material';
 import { useHook } from './useHook';
 import { SpinnerLoading } from '../../components/SpinnerLoading/SpinnerLoading';
+import { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 export function Home() {
-  const { isLoading, watches } = useHook();
+  const [searchParams] = useSearchParams();
+  const searchTerm = searchParams.get('search')?.trim() ?? '';
+  const { isLoading, watches, loadedSearch } = useHook(searchTerm);
+
+  useEffect(() => {
+    if (searchTerm && loadedSearch === searchTerm) {
+      document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [loadedSearch, searchTerm]);
 
   return (
     isLoading ? <SpinnerLoading /> :
@@ -36,11 +46,15 @@ export function Home() {
           </SimpleParallax>
         </div>
 
-        <section className="catalog-section">
+        <section id="catalog" className="catalog-section">
           <div className="catalog-header">
             <span className="catalog-kicker">Colección</span>
-            <h2>Relojes de precisión</h2>
-            <p>Descubre piezas elegantes para cada estilo y ocasión.</p>
+            <h2>{searchTerm ? `Resultados para "${searchTerm}"` : 'Relojes de precisión'}</h2>
+            <p>
+              {searchTerm
+                ? 'Productos que coinciden con tu búsqueda.'
+                : 'Descubre piezas elegantes para cada estilo y ocasión.'}
+            </p>
           </div>
 
           <Grid
@@ -51,14 +65,20 @@ export function Home() {
               width: '100%',
             }}
           >
-            {watches.map((watch) => (
-              <Grid
-                key={watch._id}
-                size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
-              >
-                <WatchCard watch={watch} />
+            {watches.length > 0 ? (
+              watches.map((watch) => (
+                <Grid
+                  key={watch._id}
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
+                >
+                  <WatchCard watch={watch} />
+                </Grid>
+              ))
+            ) : (
+              <Grid size={12}>
+                <p>{searchTerm ? 'No se encontraron relojes con ese nombre.' : 'No hay relojes disponibles.'}</p>
               </Grid>
-            ))}
+            )}
           </Grid>
         </section>
 
@@ -66,4 +86,3 @@ export function Home() {
       </>
   )
 }
-

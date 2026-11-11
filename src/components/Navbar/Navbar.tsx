@@ -23,7 +23,7 @@ import { useCartStore } from '../../store/useCartStore';
 import { useFavoritesStore } from '../../store/useFavoritesStore';
 
 
-const Search = styled('div')(({ theme }) => ({
+const Search = styled('form')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.05),
@@ -77,6 +77,17 @@ export function Navbar() {
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const searchTerm = searchValue.trim();
+
+    navigate({
+      pathname: '/',
+      search: searchTerm ? `?search=${encodeURIComponent(searchTerm)}` : '',
+      hash: '#catalog',
+    });
+  };
 
   // Obtener el total de ítems en el carrito desde Zustand
   const totalItems = useCartStore((state) => 
@@ -261,19 +272,15 @@ export function Navbar() {
           >
             Herencia del Tiempo
           </Typography>
-          <Search>
+          <Search onSubmit={handleSearch}>
             <SearchIconWrapper sx={{ color: '#d4af37' }}>
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
+              placeholder="Buscar relojes…"
+              inputProps={{ 'aria-label': 'Buscar relojes' }}
               onChange={(e) => setSearchValue(e.target.value)}
-              onKeyUp={(e) => {
-                if (e.key === 'Enter') {
-                  alert('Search value: ' + searchValue);
-                }
-              }}
+              value={searchValue}
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
